@@ -1,0 +1,22 @@
+<script>
+    const state1 = {
+        todos: [{ text: 'understand immutability', complete: false }],
+        currentText: ''
+    };
+        // 更新 currentText 属性
+    const state2 = {
+        todos: state1.todos,
+        currentText: 'understand reconciliation'
+    };
+        // 添加一个 todo
+    const state3 = {
+        todos: [
+            state1.todos[0],
+            { text: 'understand reconciliation', complete: true }
+        ],
+        currentText: ''
+    };
+
+        // 由于不可变性，这里将会报错
+    state3.currentText = 'I am not immutable!';
+</script>

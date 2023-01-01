@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Effect</title>
+</head>
+<body>
+    <script>
+        /**
+         * 第一部分
+         * 处理副作用
+         **/
+        const context = [];
+
+        const state = (initialValue) => ({
+            _subscribers: new Set(),
+            _value: initialValue,
+            get: function() {
+                const current = context.at(-1);
+                if (current) { this._subscribers.add(current); }
+                return this._value;
+            },
+            set: function(value) {
+                if (this._value === value) { return; }
+                this._value = value;
+                this._subscribers.forEach(sub => sub());
+            }
+        });
+
+        const effect = (fn) => {
+            const execute = () => {
+                context.push(execute);
+                try { fn(); } finally { context.pop(); }
+            };
+            execute();
+        };
+
+        /**
+         * 第二部分
+         * 响应性
+         **/
+        const count = state(0);
+        const increment = () => count.set(count.get() + 1);
+        const button = document.createElement('button');
+        effect(() => {
+            button.textContent = count.get();
+        });
+        button.addEventListener('click', increment);
+        document.body.appendChild(button);
+    </script>
+</body>
+</html>

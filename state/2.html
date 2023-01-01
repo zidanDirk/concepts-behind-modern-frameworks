@@ -1,0 +1,13 @@
+<script>
+    const state = (initialValue) => ({
+        _value: initialValue,
+        get: function() {
+            /* 订阅 */;
+            return this._value; 
+        },
+        set: function(value) {
+            this._value = value;
+            /* 触发更新 */;
+        }
+    });
+</script>
